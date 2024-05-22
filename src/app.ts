@@ -4,20 +4,15 @@ import dotenv from 'dotenv';
 import express, { Application, Request, Response } from 'express';
 import { orderRoutes } from './app/routes/order.route';
 import { productRoutes } from './app/routes/product.route';
-import connectDB from './server';
 
 dotenv.config();
 
 const app: Application = express();
 const port = process.env.PORT || 3000;
-console.log('MongoDB URI:', process.env.MONGODB_URI);
-
-const mongoURI = process.env.MONGODB_URI || '';
 
 //parsers
 app.use(express.json());
 app.use(cors());
-connectDB(mongoURI);
 
 //app routes
 app.use('/api/v1/products', productRoutes);

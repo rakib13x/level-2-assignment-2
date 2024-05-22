@@ -1,16 +1,17 @@
 import mongoose from 'mongoose';
+import app from './app';
+import config from './app/config';
 
-const connectDB = async (uri: string) => {
+async function main() {
   try {
-    console.log('Connecting to the database:', uri);
-    await mongoose.connect(uri, {
-      dbName: 'assignment-2',
-    });
-    console.log('Db Connected');
-  } catch (error) {
-    console.error('Error connecting to the database:', error);
-    throw error;
-  }
-};
+    await mongoose.connect(config.database_url as string);
 
-export default connectDB;
+    app.listen(config.port, () => {
+      console.log(`app is listening on port ${config.port}`);
+    });
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+main();
