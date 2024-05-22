@@ -52,36 +52,43 @@ const createOrder = async (req: Request, res: Response) => {
   }
 };
 
+// const getAllOrders = async (req: Request, res: Response) => {
+//   try {
+//     const result = await OrderServices.getAllOrdersFromDb();
+
+//     res.status(200).json({
+//       success: true,
+//       message: "Orders fetched successfully!",
+//       data: result,
+//     });
+//   } catch (error: any) {
+//     console.log(error);
+//     res.status(500).json({
+//       success: false,
+//       message: "Order Not found.",
+//       error: error.message,
+//     });
+//   }
+// };
+
 const getAllOrders = async (req: Request, res: Response) => {
   try {
-    const result = await OrderServices.getAllOrdersFromDb();
-
-    res.status(200).json({
-      success: true,
-      message: "Orders fetched successfully!",
-      data: result,
-    });
-  } catch (error: any) {
-    console.log(error);
-    res.status(500).json({
-      success: false,
-      message: "Something went wrong.",
-      error: error.message,
-    });
-  }
-};
-
-const getOrdersByUserEmail = async (req: Request, res: Response) => {
-  try {
     const { email } = req.query;
-    const result = await OrderServices.getOrdersByUserEmailFromDb(
-      email as string
-    );
+    const orders = await OrderServices.getOrders(email as string);
+
+    if (!orders) {
+      return res.status(404).json({
+        success: false,
+        message: "Orders not found",
+      });
+    }
 
     res.status(200).json({
       success: true,
-      message: "Orders fetched successfully for user email!",
-      data: result,
+      message: email
+        ? "Orders fetched successfully for user email!"
+        : "All orders fetched successfully!",
+      data: orders,
     });
   } catch (error: any) {
     console.log(error);
@@ -96,5 +103,4 @@ const getOrdersByUserEmail = async (req: Request, res: Response) => {
 export const OrderControllers = {
   createOrder,
   getAllOrders,
-  getOrdersByUserEmail,
 };
