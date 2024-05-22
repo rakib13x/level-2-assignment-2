@@ -15,7 +15,7 @@ const mongoURI = process.env.MONGODB_URI || '';
 //parsers
 app.use(express.json());
 app.use(cors());
-console.log('MongoDB URI:', mongoURI);
+
 connectDB(mongoURI as string);
 
 //app routes

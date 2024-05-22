@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const connectDB = async (uri: string) => {
   try {
-    await mongoose.connect(uri);
+    await mongoose.connect(uri as string);
     console.log('Db Connected');
   } catch (error) {
     console.error('Error connecting to the database:', error);
