@@ -17,18 +17,9 @@ app.use(cors());
 app.use('/api/v1/products', productRoutes);
 app.use('/api/v1/orders', orderRoutes);
 
-app.use((req: Request, res: Response) => {
-  res.status(200).json({
-    success: true,
-    message: 'welcome to my page',
-  });
-});
-
-app.use((req: Request, res: Response) => {
-  res.status(404).json({
-    success: false,
-    message: 'Route not found',
-  });
+// Welcome message for the root endpoint
+app.get('/', (req: Request, res: Response) => {
+  res.send('Welcome to my API!');
 });
 
 // Error-handling middleware
@@ -39,10 +30,6 @@ app.use((err: any, req: Request, res: Response) => {
     message: 'Something went wrong.',
     error: err.message,
   });
-});
-
-app.get('/', (req: Request, res: Response) => {
-  res.send('Hello World!');
 });
 
 export default app;
