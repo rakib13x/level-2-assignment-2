@@ -10,13 +10,12 @@ dotenv.config();
 
 const app: Application = express();
 const port = process.env.PORT || 3000;
-const mongoURI = process.env.MONGODB_URI || '';
-console.log('MongoDB URI:', mongoURI);
+const mongoURI = process.env.MONGODB_URI;
 
 //parsers
 app.use(express.json());
 app.use(cors());
-connectDB(mongoURI);
+connectDB(mongoURI!);
 
 //app routes
 app.use('/api/v1/products', productRoutes);
