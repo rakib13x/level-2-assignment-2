@@ -1,13 +1,13 @@
 import mongoose from 'mongoose';
 
-const connectDB = async (uri: string) => {
-  try {
-    await mongoose.connect(uri as string);
-    console.log('Db Connected');
-  } catch (error) {
-    console.error('Error connecting to the database:', error);
-    throw error; // Rethrow the error to propagate it further
-  }
+const connectDB = (uri: string) => {
+  mongoose
+    //database connection
+    .connect(uri, {
+      dbName: 'assignment-2',
+    })
+    .then((c) => console.log(`Db Connected to ${c.connection.host}`))
+    .catch((e) => console.log(e));
 };
 
 export default connectDB;
