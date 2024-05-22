@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 const variantValidationSchema = z.object({
   type: z.string().min(1),
@@ -10,7 +10,7 @@ const inventoryValidationSchema = z.object({
   inStock: z.boolean(),
 });
 
-const productValidationSchema = z.object({
+export const productValidationSchema = z.object({
   name: z.string().min(1),
   description: z.string().min(1),
   price: z.number().nonnegative(),
@@ -19,5 +19,3 @@ const productValidationSchema = z.object({
   variants: z.array(variantValidationSchema),
   inventory: inventoryValidationSchema,
 });
-
-export default productValidationSchema;

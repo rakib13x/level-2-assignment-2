@@ -2,7 +2,7 @@
 import { Request, Response } from 'express';
 import { z } from 'zod';
 import { ProductServices } from '../services/product.service';
-import productValidationSchema from '../validations/product.validation';
+import { productValidationSchema } from '../validations/product.validation';
 
 const createProduct = async (req: Request, res: Response) => {
   try {
