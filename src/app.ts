@@ -17,7 +17,7 @@ app.use(cors());
 connectDB(mongoURI);
 
 //app routes
-app.use("/api/v1/students", productRoutes);
+app.use("/api/v1/products", productRoutes);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello World!");
