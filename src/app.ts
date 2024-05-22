@@ -1,6 +1,6 @@
 import cors from "cors";
 import dotenv from "dotenv";
-import express, { Application, Request, Response } from "express";
+import express, { Application, NextFunction, Request, Response } from "express";
 import { orderRoutes } from "./app/routes/order.route";
 import { productRoutes } from "./app/routes/product.route";
 import { connectDB } from "./server";
@@ -20,6 +20,23 @@ connectDB(mongoURI);
 //app routes
 app.use("/api/v1/products", productRoutes);
 app.use("/api/v1/orders", orderRoutes);
+
+app.use((req: Request, res: Response, next: NextFunction) => {
+  res.status(404).json({
+    success: false,
+    message: "Route not found",
+  });
+});
+
+// Error-handling middleware
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  console.error(err.stack);
+  res.status(500).json({
+    success: false,
+    message: "Something went wrong.",
+    error: err.message,
+  });
+});
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello World!");

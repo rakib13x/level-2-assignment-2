@@ -20,15 +20,31 @@ const createProduct = async (req: Request, res: Response) => {
 
 const getAllProducts = async (req: Request, res: Response) => {
   try {
-    const result = await ProductServices.getAllProductsFromDb();
+    const { searchTerm } = req.query;
+    const regex = searchTerm
+      ? new RegExp(searchTerm as string, "i")
+      : undefined;
+    const products = await ProductServices.getAllProductsFromDb(regex);
+
+    if (products.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
 
     res.status(200).json({
       success: true,
-      message: "Products are retrieved successfully.",
-      data: result,
+      message: "Products fetched successfully!",
+      data: products,
     });
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Something went wrong.",
+      error: error.message,
+    });
   }
 };
 
@@ -107,39 +123,39 @@ const deleteProduct = async (req: Request, res: Response) => {
   }
 };
 
-const searchProduct = async (req: Request, res: Response) => {
-  try {
-    const { searchTerm } = req.query;
+// const searchProduct = async (req: Request, res: Response) => {
+//   try {
+//     const { searchTerm } = req.query;
 
-    if (!searchTerm || typeof searchTerm !== "string") {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid search term.",
-      });
-    }
+//     if (!searchTerm || typeof searchTerm !== "string") {
+//       return res.status(400).json({
+//         success: false,
+//         message: "Invalid search term.",
+//       });
+//     }
 
-    const regex = new RegExp(searchTerm, "i");
-    const result = await ProductServices.searchProductFromDb(regex);
+//     const regex = new RegExp(searchTerm, "i");
+//     const result = await ProductServices.searchProductFromDb(regex);
 
-    res.status(200).json({
-      success: true,
-      message: `Products matching search term '${searchTerm}' fetched successfully!`,
-      data: result,
-    });
-  } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: "Something went wrong.",
-      error: error.message,
-    });
-  }
-};
+//     res.status(200).json({
+//       success: true,
+//       message: `Products matching search term '${searchTerm}' fetched successfully!`,
+//       data: result,
+//     });
+//   } catch (error: any) {
+//     res.status(500).json({
+//       success: false,
+//       message: "Something went wrong.",
+//       error: error.message,
+//     });
+//   }
+// };
 
 export const ProductControllers = {
   createProduct,
+
   getAllProducts,
   getSingleProduct,
   updateProduct,
   deleteProduct,
-  searchProduct,
 };

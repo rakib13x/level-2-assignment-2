@@ -5,9 +5,16 @@ const createProductIntoDb = async (product: TProduct) => {
   return result;
 };
 
-const getAllProductsFromDb = async () => {
-  const result = await ProductModel.find();
-  return result;
+const getAllProductsFromDb = async (regex?: RegExp) => {
+  try {
+    const result = regex
+      ? await ProductModel.find({ name: { $regex: regex } })
+      : await ProductModel.find();
+
+    return result;
+  } catch (error: any) {
+    throw new Error("Error fetching products: " + error.message);
+  }
 };
 
 const getSingleProductFromDb = async (id: string) => {
@@ -26,18 +33,10 @@ const deleteProductFromDb = async (id: string) => {
   return result;
 };
 
-const searchProductFromDb = async (regex: RegExp) => {
-  const result = await ProductModel.find({
-    name: { $regex: regex },
-  });
-  return result;
-};
-
 export const ProductServices = {
   createProductIntoDb,
   getAllProductsFromDb,
   getSingleProductFromDb,
   updateProductInDb,
   deleteProductFromDb,
-  searchProductFromDb,
 };
