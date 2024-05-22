@@ -15,7 +15,7 @@ const mongoURI = process.env.MONGODB_URI;
 //parsers
 app.use(express.json());
 app.use(cors());
-connectDB(mongoURI!);
+connectDB(mongoURI as string);
 
 //app routes
 app.use('/api/v1/products', productRoutes);
