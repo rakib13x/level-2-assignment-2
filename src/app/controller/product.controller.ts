@@ -20,7 +20,7 @@ const createProduct = async (req: Request, res: Response) => {
 
 const getAllProducts = async (req: Request, res: Response) => {
   try {
-    const result = await ProductServices.getAllProductFromDb();
+    const result = await ProductServices.getAllProductsFromDb();
 
     res.status(200).json({
       success: true,
