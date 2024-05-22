@@ -1,6 +1,7 @@
 import cors from "cors";
 import dotenv from "dotenv";
 import express, { Application, Request, Response } from "express";
+import { orderRoutes } from "./app/routes/order.route";
 import { productRoutes } from "./app/routes/product.route";
 import { connectDB } from "./server";
 
@@ -18,6 +19,7 @@ connectDB(mongoURI);
 
 //app routes
 app.use("/api/v1/products", productRoutes);
+app.use("/api/v1/orders", orderRoutes);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello World!");
