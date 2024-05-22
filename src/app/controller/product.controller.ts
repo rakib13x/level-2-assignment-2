@@ -1,6 +1,8 @@
-import { Request, Response } from "express";
-import { ProductServices } from "../services/product.service";
-import productValidationSchema from "../validations/product.validation";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Request, Response } from 'express';
+import { z } from 'zod';
+import { ProductServices } from '../services/product.service';
+import productValidationSchema from '../validations/product.validation';
 
 const createProduct = async (req: Request, res: Response) => {
   try {
@@ -10,39 +12,40 @@ const createProduct = async (req: Request, res: Response) => {
     const result = await ProductServices.createProductIntoDb(validateData);
     res.status(200).json({
       success: true,
-      message: "Product is added successfully.",
+      message: 'Product is added successfully.',
       data: result,
     });
-  } catch (error) {
-    console.log(error);
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: 'Something went wrong.',
+      error: error.message,
+    });
   }
 };
 
 const getAllProducts = async (req: Request, res: Response) => {
   try {
-    const { searchTerm } = req.query;
-    const regex = searchTerm
-      ? new RegExp(searchTerm as string, "i")
-      : undefined;
+    const { name } = req.query;
+    const regex = name ? new RegExp(name as string, 'i') : undefined;
     const products = await ProductServices.getAllProductsFromDb(regex);
 
     if (products.length === 0) {
       return res.status(404).json({
         success: false,
-        message: "Product not found",
+        message: 'Product not found',
       });
     }
 
     res.status(200).json({
       success: true,
-      message: "Products fetched successfully!",
+      message: 'Products fetched successfully!',
       data: products,
     });
   } catch (error: any) {
-    console.log(error);
     res.status(500).json({
       success: false,
-      message: "Something went wrong.",
+      message: 'Something went wrong.',
       error: error.message,
     });
   }
@@ -55,13 +58,13 @@ const getSingleProduct = async (req: Request, res: Response) => {
 
     res.status(200).json({
       success: true,
-      message: "Product is retrieved successfully.",
+      message: 'Product is retrieved successfully.',
       data: result,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: "Something went wrong.",
+      message: 'Something went wrong.',
       error: error,
     });
   }
@@ -71,27 +74,37 @@ const updateProduct = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params;
     const updateData = req.body;
+
+    productValidationSchema.parse(updateData);
+
     const result = await ProductServices.updateProductInDb(
       productId,
-      updateData
+      updateData,
     );
 
     if (!result) {
       return res.status(404).json({
         success: false,
-        message: "Product not found.",
+        message: 'Product not found.',
       });
     }
 
     res.status(200).json({
       success: true,
-      message: "Product is updated successfully.",
+      message: 'Product is updated successfully.',
       data: result,
     });
   } catch (error: any) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({
+        success: false,
+        message: 'Validation error.',
+        errors: error.errors,
+      });
+    }
     res.status(500).json({
       success: false,
-      message: "Something went wrong.",
+      message: 'Something went wrong.',
       error: error.message,
     });
   }
@@ -105,19 +118,19 @@ const deleteProduct = async (req: Request, res: Response) => {
     if (!result) {
       return res.status(404).json({
         success: false,
-        message: "Product not found.",
+        message: 'Product not found.',
       });
     }
 
     res.status(200).json({
       success: true,
-      message: "Product is deleted successfully.",
+      message: 'Product is deleted successfully.',
       data: result,
     });
   } catch (error: any) {
     res.status(500).json({
       success: false,
-      message: "Something went wrong.",
+      message: 'Something went wrong.',
       error: error.message,
     });
   }

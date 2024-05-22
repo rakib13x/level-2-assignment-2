@@ -1,5 +1,6 @@
-import { TProduct } from "../interfaces/product.interface";
-import { ProductModel } from "../model/product.model";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { TProduct } from '../interfaces/product.interface';
+import { ProductModel } from '../model/product.model';
 const createProductIntoDb = async (product: TProduct) => {
   const result = await ProductModel.create(product);
   return result;
@@ -13,7 +14,7 @@ const getAllProductsFromDb = async (regex?: RegExp) => {
 
     return result;
   } catch (error: any) {
-    throw new Error("Error fetching products: " + error.message);
+    throw new Error('Error fetching products: ' + error.message);
   }
 };
 
